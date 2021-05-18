@@ -88,8 +88,8 @@
                             <div class="col-md-12">
                                 <div class="table-responsive">
                             
-                                    <table ng-show="offlineProducts" class="table table-bordered table-hover" id="productTable">
-                                        <thead class="bg-success text-white">
+                                    <table ng-show="offlineProductsDiv" class="table table-bordered table-hover" id="productTable">
+                                        <thead class="bg-secondary text-white">
                                             <th>#</th>
                                             <th>Product&nbsp;Name</th>
                                             <th>Product&nbsp;Category</th>
@@ -101,7 +101,9 @@
                                         <tbody>
                                             <tr ng-repeat="(key, p) in offlineProducts | filter: offlineKeyword | orderBy:'-id'">
                                                 <td>{{ key+1 }}</td>
-                                                <td>{{ p.product_name }}</td>
+                                                <td>
+                                                    <a href="#" ng-click="productDetails('41')">{{ p.product_name }}</a>
+                                                </td>
                                                 <td>{{ p.category_name }}</td>
                                                 <td>{{ p.stock }}</td>
                                                 <td>{{ p.selling_price }}</td>
@@ -122,30 +124,36 @@
 
             app.config(["$locationProvider", function($locationProvider) { $locationProvider.html5Mode(true); }]);
 
-            app.controller('productCtrl', function($scope, $http, $filter, $location) {
+            app.controller('productCtrl', function($scope, $http, $location) {
+               
                 $http({
                     method: 'GET',
                     url: 'http://27.147.135.164/ecomm/api/products/get_product_list',
+                    
                 })
                 .then(function(response){ 
                     $scope.offlineProducts = response.data.product_list;
-
-                    if($scope.products.length>0){
-                        $scope.offlineProducts = true;
+                    
+                
+                    if($scope.offlineProducts.length>0){
+                        $scope.offlineProductsDiv = true;
                     }
 
                     else{
-                        $scope.offlineProducts = false;
+                        $scope.offlineProductsDiv = false;
                     }
                 });
+
+                $scope.productDetails = function(id) {
+                    alert(id);
+                }
                 
                 $scope.searchProducts = function(keyword) {
 
-                    var $params = {};
-
                     if($scope.keyword != null && $.trim($scope.keyword) != ''){
-                
-                        
+
+                        var $params = {};
+
                         $params.search = $scope.keyword;
                         
                         //generate url
@@ -154,7 +162,7 @@
                         $http({
                             method: 'GET',
                             url: 'http://27.147.135.164/ecomm/api/products/get_product_list',
-                            params:  $params
+                            params: $params
                         })
 
                         .then(function(response){ 
