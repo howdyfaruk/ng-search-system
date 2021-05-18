@@ -19,7 +19,7 @@
         <div ng-app="taskOne" ng-controller="productCtrl">
             <div class="container">
                 <div class="row py-3 mt-3">
-                    <div class="col-md-8 offset-md-2">
+                    <div class="col-md-10 offset-md-1">
                         <div class="row py-2">
                             <div class="col-md-4">
                                 <h5 class="font-weight-bold">Product&nbsp;List:</h5>
@@ -60,7 +60,7 @@
                             </div>
                         </div>
 
-                        <div class="row" ng-if="productArr.length>0">
+                        <div class="row" ng-if="productArr.length>0" ng-if="liveKeyword.length>0">
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover" id="productTable">
@@ -75,7 +75,7 @@
                                         </thead>
                                      
                                         <tbody>
-                                            <tr ng-show="type == 'live'" ng-repeat="(key, p) in productArr | filter: liveKeyword | orderBy:'-id'">
+                                            <tr ng-if="liveKeyword.length>0" ng-repeat="(key, p) in productArr | filter: liveKeyword | orderBy:'-id'">
                                                 <td>{{ key+1 }}</td>
                                                 <td>{{ p.product_name }}</td>
                                                 <td>{{ p.category_name }}</td>
