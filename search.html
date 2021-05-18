@@ -2,12 +2,19 @@
 <html lang="en-US">
     <head>
         <meta charset="utf-8">
-        <title>Home Task One :: CIBL</title>
+        <title>NG Search System :: CIBL</title>
 
         <!-- bootstrap -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
       
         <base href="/">
+
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        
+        <!-- angular js -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
     </head>
     
     <body>
@@ -21,7 +28,7 @@
                             </div>
                         </div>
                         <div class="row mt-3">
-                            <div class="col-md-6 offset-md-3 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <div class="input-group">
                                     <input name="search" ng-model="keyword" type="text"class="form-control" placeholder="Search Product Here ..." id="searchInput">
                                     <div class="input-group-append">
@@ -68,22 +75,69 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <input name="offlineKeyword" ng-model="offlineKeyword" type="text"class="form-control" placeholder="Search Product Here ..." id="searchInput" ng-change="offProducts()">
+                                </div>    
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                            
+                                    <table ng-show="offlineProducts" class="table table-bordered table-hover" id="productTable">
+                                        <thead class="bg-success text-white">
+                                            <th>#</th>
+                                            <th>Product&nbsp;Name</th>
+                                            <th>Product&nbsp;Category</th>
+                                            <th>Stock&nbsp;Amount</th>
+                                            <th>Selling&nbsp;Price</th>
+                                            <th>Cost&nbsp;Price</th>
+                                        </thead>
+                                     
+                                        <tbody>
+                                            <tr ng-repeat="(key, p) in offlineProducts | filter: offlineKeyword | orderBy:'-id'">
+                                                <td>{{ key+1 }}</td>
+                                                <td>{{ p.product_name }}</td>
+                                                <td>{{ p.category_name }}</td>
+                                                <td>{{ p.stock }}</td>
+                                                <td>{{ p.selling_price }}</td>
+                                                <td>{{ p.cost_price }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-        
-        <!-- angular js -->
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+      
         <script>
             var app = angular.module('taskOne', []);
 
             app.config(["$locationProvider", function($locationProvider) { $locationProvider.html5Mode(true); }]);
 
             app.controller('productCtrl', function($scope, $http, $filter, $location) {
+                $http({
+                    method: 'GET',
+                    url: 'http://27.147.135.164/ecomm/api/products/get_product_list',
+                })
+                .then(function(response){ 
+                    $scope.offlineProducts = response.data.product_list;
+
+                    if($scope.products.length>0){
+                        $scope.offlineProducts = true;
+                    }
+
+                    else{
+                        $scope.offlineProducts = false;
+                    }
+                });
                 
                 $scope.searchProducts = function(keyword) {
 
@@ -115,7 +169,7 @@
                                 $scope.productAll = false;
                                 $scope.productEmpt = true;
                             }
-                        }); 
+                        });
                     }
                     else{
                         $scope.productEmpt = false;
@@ -124,6 +178,7 @@
                         $scope.products = [];
                     }
                 };
+
             });
         </script>
     </body>
