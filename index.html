@@ -39,14 +39,12 @@
 
                         <div class="row mt-3" ng-show="type == 'live'">
                             <div class="col-md-8 mb-2">
-                                <form ng-submit="submit()">
-                                    <div class="input-group">
-                                        <input name="search" ng-model="search" type="text"class="form-control" placeholder="Search Product Here ..." id="searchInput">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-success" type="submit" id="searchBtn">Search</button>
-                                        </div>
-                                    </div>    
-                                </form>
+                                <div class="input-group">
+                                    <input name="search" ng-model="search" type="text"class="form-control" placeholder="Search Product Here ..." id="searchInput">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-success" type="submit" id="searchBtn" ng-click="submit()">Search</button>
+                                    </div>
+                                </div>    
                             </div>
                         </div>
 
@@ -62,7 +60,7 @@
                             </div>
                         </div>
 
-                        <div class="row" ng-if="products.length>0">
+                        <div class="row" ng-if="productArr.length>0"  ng-show="type == 'live'">
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-hover" id="productTable">
@@ -77,7 +75,7 @@
                                         </thead>
                                      
                                         <tbody>
-                                            <tr ng-show="type == 'live'" ng-repeat="(key, p) in productArr | filter: keyword | orderBy:'-id'">
+                                            <tr ng-repeat="(key, p) in productArr | filter: keyword | orderBy:'-id'">
                                                 <td>{{ key+1 }}</td>
                                                 <td>{{ p.product_name }}</td>
                                                 <td>{{ p.category_name }}</td>
@@ -85,8 +83,31 @@
                                                 <td>{{ p.selling_price }}</td>
                                                 <td>{{ p.cost_price }}</td>
                                             </tr>
+                                            <!-- <tr ng-if="productArr.length == 0">
+                                                <td colspan="6">No Product Found ....</td>
+                                            </tr> -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
-                                            <tr ng-show="type == 'offline'" ng-repeat="(key, p) in products | filter: keyword | orderBy:'-id'">
+                        <div class="row" ng-if="products.length>0" ng-show="type == 'offline'">
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-hover" id="productTable">
+                                        <thead class="bg-success text-white">
+                                            <th>#</th>
+                                            <th>Product&nbsp;Name</th>
+                                            <th>Product&nbsp;Category</th>
+                                            <th>Stock&nbsp;Amount</th>
+                                            <th>Selling&nbsp;Price</th>
+                                            <th>Cost&nbsp;Price</th>
+                                           
+                                        </thead>
+                                     
+                                        <tbody>
+                                            <tr ng-repeat="(key, p) in products | filter: keyword | orderBy:'-id'">
                                                 <td>{{ key+1 }}</td>
                                                 <td>{{ p.product_name }}</td>
                                                 <td>{{ p.category_name }}</td>
@@ -107,7 +128,7 @@
         <script>
             var app = angular.module('taskOne', []);
 
-            app.controller('productCtrl', function($scope, $http, $filter) {
+            app.controller('productCtrl', function($scope, $http, $filter, $location) {
                 
                 $scope.searchType = function (type) {
    
@@ -117,8 +138,11 @@
                         $scope.keyword = '';
 
                         $scope.submit = function() {
-
                             if ($scope.search) {
+                                var liveUrl = $location.absUrl();
+                                liveUrl = liveUrl+'?search='+$scope.search;
+                                
+                                alert(liveUrl);
                                 
                                 $scope.productArr.push({
                                         product_name: "Beef",
@@ -149,13 +173,12 @@
                                 $scope.keyword =  $scope.search;
                                 $scope.search = '';
                             }
-                        };
-
-                        
-                        
+                        };  
                     }
 
                     else if (type == "offline") {
+                        $scope.keyword = '';
+
                         $http.get("http://27.147.135.164/ecomm/api/products/get_product_list")
 
                         .then(function(response){ 
@@ -168,6 +191,8 @@
                 };
 
                 $scope.allProducts = function(keyword) {
+
+                    $scope.keyword = '';
 
                     $http.get("http://27.147.135.164/ecomm/api/products/get_product_list")
 
