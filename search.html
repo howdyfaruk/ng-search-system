@@ -6,12 +6,7 @@
 
         <!-- bootstrap -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-        
-        <!-- angular js -->
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+      
         <base href="/">
     </head>
     
@@ -36,10 +31,20 @@
                             </div>
                         </div>
 
-                        <div class="row" ng-if="products.length>0">
+                        <div class="row">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-hover" id="productTable">
+                                    <table ng-show="productEmpt" class="table table-bordered table-hover" id="productTable">
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <p class="text-center">No Product Found ...</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <table ng-show="productAll" class="table table-bordered table-hover" id="productTable">
                                         <thead class="bg-success text-white">
                                             <th>#</th>
                                             <th>Product&nbsp;Name</th>
@@ -63,27 +68,16 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="row" ng-if="products.length==0">
-                            <div class="col-md-12">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover" id="productTable">
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="6">
-                                                    <p class="text-center">No Product Found ...</p>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        
+        <!-- angular js -->
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
         <script>
             var app = angular.module('taskOne', []);
 
@@ -111,11 +105,25 @@
 
                         .then(function(response){ 
                             $scope.products = response.data.product_list;
-                        });
-                    }
-                   
-                };
 
+                            if($scope.products.length>0){
+                                $scope.productAll = true;
+                                $scope.productEmpt = false;
+                            }
+
+                            else{
+                                $scope.productAll = false;
+                                $scope.productEmpt = true;
+                            }
+                        }); 
+                    }
+                    else{
+                        $scope.productEmpt = false;
+                        $scope.productAll = false;
+                        $location.url($location.path());
+                        $scope.products = [];
+                    }
+                };
             });
         </script>
     </body>
