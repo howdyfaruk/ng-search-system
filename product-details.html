@@ -20,7 +20,7 @@
     <body>
         <div ng-app="productApp" ng-controller="productDetailsCtrl">
             <div class="container">
-                <div class="card my-3" id="productsDiv" ng-show="productDiv">
+                <div class="card my-3" id="productsDiv">
                     <div class="card-header">
                         <h5 class="font-weight-bold text-center">Product&nbsp;Details</h5>
                     </div>
@@ -52,9 +52,17 @@
                                     <li class="list-group-item"><b>E Product Price :</b> {{ product.eproduct_price }}</li>
                                     <li class="list-group-item"><b>Country :</b> {{ product.country }}</li>
 
-                                    <li class="list-group-item"><b>Picture :</b> {{ product.picture }}</li>
-                                    <li class="list-group-item"><b>Product :</b> {{ product.product }}</li>
-                                    <li class="list-group-item"><b>Product Preview :</b> {{ product.product_preview }}</li>
+                                    <li class="list-group-item">
+                                        <img src="http://27.147.135.164/ecomm/assets/uploads/files/{{ product.picture }}" alt="picture">
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="http://27.147.135.164/ecomm/assets/uploads/files/{{ product.product }}">Product </a>
+                                        <!-- <b>Product :</b> {{ product.product }} -->
+                                    </li>
+                                    <li class="list-group-item">
+                                        <a href="http://27.147.135.164/ecomm/assets/uploads/files/{{ product.product_preview }}">Product Preview</a>
+                                        <!-- <b>Product Preview :</b> {{ product.product_preview }} -->
+                                    </li>
                                     <li class="list-group-item"><b>Total Reviews :</b> {{ product.total_reviews }}</li>
                                     <li class="list-group-item"><b>Review & Rating :</b> {{ product.review_rating }}</li>
                                 </ul>
@@ -132,7 +140,7 @@
                     </div>
                 </div>
 
-                <div class="card my-3" id="distributorsDiv" ng-show="distributorsDiv">
+                <div class="card my-3" id="distributorsDiv">
                     <div class="card-header">
                         <h5 class="font-weight-bold text-center">Distributors:</h5>
                     </div>
@@ -160,7 +168,7 @@
                     </div>
                 </div>
 
-                <div class="card my-3" id="editorsDiv" ng-show="editorsDiv">
+                <div class="card my-3" id="editorsDiv">
                     <div class="card-header">
                         <h5 class="font-weight-bold text-center">Editors:</h5>
                     </div>
@@ -188,7 +196,7 @@
                     </div>
                 </div>
 
-                <div class="card my-3" id="designersDiv" ng-show="designersDiv">
+                <div class="card my-3" id="designersDiv">
                     <div class="card-header">
                         <h5 class="font-weight-bold text-center">Designers:</h5>
                     </div>
@@ -203,7 +211,7 @@
                     </div>
                 </div>
 
-                <div class="card my-3" id="reviewsDiv" ng-show="reviewsDiv">
+                <div class="card my-3" id="reviewsDiv">
                     <div class="card-header">
                         <h5 class="font-weight-bold text-center">Reviews:</h5>
                     </div>
@@ -218,7 +226,7 @@
                     </div>
                 </div>
 
-                <div class="card my-3" id="authorsDiv" ng-show="authorsDiv">
+                <div class="card my-3" id="authorsDiv">
                     <div class="card-header">
                         <h5 class="font-weight-bold text-center">Authors:</h5>
                     </div>
@@ -233,7 +241,7 @@
                     </div>
                 </div>
 
-                <div class="card my-3" id="translatorsDiv" ng-show="translatorsDiv">
+                <div class="card my-3" id="translatorsDiv">
                     <div class="card-header">
                         <h5 class="font-weight-bold text-center">Translators:</h5>
                     </div>
@@ -248,7 +256,7 @@
                     </div>
                 </div>
 
-                <div class="card my-3" id="shareEditorsDiv" ng-show="shareEditorsDiv">
+                <div class="card my-3" id="shareEditorsDiv">
                     <div class="card-header">
                         <h5 class="font-weight-bold text-center">Share Editors:</h5>
                     </div>
@@ -268,9 +276,7 @@
         <script>
             var app = angular.module('productApp', []);
 
-            app.config(["$locationProvider", function($locationProvider) { $locationProvider.html5Mode(true); }]);
-
-            app.controller('productDetailsCtrl', function($scope, $http, $location) {
+            app.controller('productDetailsCtrl', function($scope, $http) {
                
                 $http({
                     method: 'GET',
@@ -286,39 +292,7 @@
                     $scope.editors = response.data.editor;
                     $scope.shareEditors = response.data.shar_e_editor;
                     $scope.authors = response.data.additional_author;
-                    $scope.designers = response.data.designer;
-
-                    if($scope.product != null){
-                        $scope.productDiv = true;
-                    }
-      
-                    if($scope.distributors !=null && $.trim($scope.distributors) != ''){
-                        $scope.distributorsDiv = true;
-                    }
-                    
-                    if($scope.editors !=null && $.trim($scope.editors) != ''){
-                        $scope.editorsDiv = true;
-                    }
-
-
-                    if($scope.authors !=null && $.trim($scope.authors) != ''){
-                        $scope.authorsDiv = true;
-                    }
-
-                    if($scope.shareEditors !=null && $.trim($scope.shareEditors) != ''){
-                        $scope.shareEditorsDiv = true;
-                    }
-
-                    if($scope.reviews !=null && $.trim($scope.reviews) != ''){
-                        $scope.reviewsDiv = true;
-                    }
-
-                    if($scope.translators !=null && $.trim($scope.translators) != ''){
-                        $scope.translatorsDiv = true;
-                    }   
-                    if($scope.designers !=null && $.trim($scope.designers) != ''){
-                        $scope.designersDiv = true;
-                    }   
+                    $scope.designers = response.data.designer;                   
                 });
             });
         </script>

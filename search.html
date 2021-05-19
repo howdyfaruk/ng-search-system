@@ -102,7 +102,7 @@
                                             <tr ng-repeat="(key, p) in offlineProducts | filter: offlineKeyword | orderBy:'-id'">
                                                 <td>{{ key+1 }}</td>
                                                 <td>
-                                                    <a href="#" ng-click="productDetails('41')">{{ p.product_name }}</a>
+                                                    <a href="#" ng-click="productDetails(p.product_id)">{{ p.product_name }}</a>
                                                 </td>
                                                 <td>{{ p.category_name }}</td>
                                                 <td>{{ p.stock }}</td>
